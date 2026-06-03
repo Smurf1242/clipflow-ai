@@ -42,63 +42,38 @@ export default function Pricing() {
 
         <div className="flex justify-center mb-16">
           <div className="inline-flex bg-zinc-900 rounded-full p-1">
-            <button 
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-8 py-3 rounded-full transition ${billingCycle === 'monthly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
-            >
-              Monthly
-            </button>
-            <button 
-              onClick={() => setBillingCycle('yearly')}
-              className={`px-8 py-3 rounded-full transition ${billingCycle === 'yearly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
-            >
-              Yearly <span className="text-emerald-400">(Save 20%)</span>
-            </button>
+            <button onClick={() => setBillingCycle('monthly')} className={`px-8 py-3 rounded-full transition ${billingCycle === 'monthly' ? 'bg-white text-black' : 'text-zinc-400'}`}>Monthly</button>
+            <button onClick={() => setBillingCycle('yearly')} className={`px-8 py-3 rounded-full transition ${billingCycle === 'yearly' ? 'bg-white text-black' : 'text-zinc-400'}`}>Yearly (Save 20%)</button>
           </div>
         </div>
 
-        {/* FORCE HORIZONTAL LAYOUT */}
-        <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-          {plans.map((plan, index) => (
-            <div
-              key={index}
-              className={`glass rounded-3xl p-8 flex flex-col h-full relative ${plan.popular ? 'border-2 border-violet-500 ring-2 ring-violet-500/30' : 'border border-white/10'}`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-violet-600 px-6 py-1 rounded-full text-sm font-medium">
-                  Most Popular
-                </div>
-              )}
+        <div className="grid md:grid-cols-3 gap-8">
+          {plans.map((plan, i) => (
+            <div key={i} className={`glass rounded-3xl p-8 flex flex-col h-full relative ${plan.popular ? 'border-2 border-violet-500 scale-105' : 'border border-white/10'}`}>
+              {plan.popular && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-violet-600 text-white px-6 py-1 rounded-full text-sm">Most Popular</div>}
 
               <h3 className="text-3xl font-bold mb-2">{plan.name}</h3>
               <div className="flex items-baseline mb-8">
                 <span className="text-6xl font-bold">€{plan.price}</span>
-                <span className="text-zinc-400 ml-2 text-xl">{plan.period}</span>
+                <span className="text-zinc-400 ml-2">{plan.period}</span>
               </div>
 
               <p className="text-zinc-400 mb-8">{plan.desc}</p>
 
-              <ul className="space-y-4 mb-10 flex-1">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm">
-                    <span className="text-emerald-400 mt-1">✓</span>
-                    <span>{feature}</span>
+              <ul className="space-y-4 mb-12 flex-1">
+                {plan.features.map((f, j) => (
+                  <li key={j} className="flex gap-3">
+                    <span className="text-emerald-400">✓</span> {f}
                   </li>
                 ))}
               </ul>
 
-              <button className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all ${plan.popular 
-                ? 'bg-white text-black hover:bg-zinc-100' 
-                : 'bg-zinc-800 hover:bg-zinc-700'}`}>
+              <button className={`w-full py-4 rounded-2xl font-semibold transition-all ${plan.popular ? 'bg-white text-black' : 'bg-zinc-800 hover:bg-zinc-700'}`}>
                 {plan.btn}
               </button>
             </div>
           ))}
         </div>
-
-        <p className="text-center text-zinc-500 mt-16">
-          All plans include access to AI clip generation. Cancel anytime.
-        </p>
       </div>
     </div>
   );

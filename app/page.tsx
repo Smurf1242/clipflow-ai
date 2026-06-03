@@ -8,26 +8,26 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      {/* Updated Header with your logo */}
-      <header className="border-b border-white/10 bg-black/90 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <img 
-              src="/logo.png" 
-              alt="ClipFlow AI" 
-              className="h-11 w-auto" 
-            />
-          </div>
+{/* Header with smaller logo */}
+<header className="border-b border-white/10 bg-black/90 backdrop-blur-md sticky top-0 z-50">
+  <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+    <div className="flex items-center gap-4">
+      <img 
+        src="/logo.png" 
+        alt="ClipFlow AI" 
+        className="h-9 w-auto"   // Smaller size
+      />
+    </div>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <a href="/" className="hover:text-violet-400 transition">Home</a>
-            <a href="/why" className="hover:text-violet-400 transition">Why Us</a>
-            <a href="/pricing" className="hover:text-violet-400 transition">Pricing</a>
-          </nav>
+    <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+      <a href="/" className="hover:text-violet-400 transition">Home</a>
+      <a href="/why" className="hover:text-violet-400 transition">Why Us</a>
+      <a href="/pricing" className="hover:text-violet-400 transition">Pricing</a>
+    </nav>
 
-          <AuthButton user={user} />
-        </div>
-      </header>
+    <AuthButton user={user} />
+  </div>
+</header>
 
       {user ? (
         <Dashboard />

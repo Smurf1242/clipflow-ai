@@ -1,15 +1,14 @@
 'use client';
 import { useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const supabase = createClient();
 
   const plans = [
     {
       name: "Free",
       price: 0,
+      period: billingCycle === 'monthly' ? '/mo' : '/yr',
       description: "Get started",
       features: [
         "5 AI clip generations per month",
@@ -23,6 +22,7 @@ export default function Pricing() {
     {
       name: "Pro",
       price: billingCycle === 'monthly' ? 19 : 190,
+      period: billingCycle === 'monthly' ? '/mo' : '/yr',
       description: "For serious creators",
       features: [
         "Unlimited AI clip generations",
@@ -37,6 +37,7 @@ export default function Pricing() {
     {
       name: "Creator",
       price: billingCycle === 'monthly' ? 39 : 390,
+      period: billingCycle === 'monthly' ? '/mo' : '/yr',
       description: "For power users",
       features: [
         "Everything in Pro",
@@ -52,7 +53,7 @@ export default function Pricing() {
 
   return (
     <div className="min-h-screen bg-[#050505] py-20">
-      <div className="max-w-5xl mx-auto px-6 text-center">
+      <div className="max-w-6xl mx-auto px-6 text-center">
         <h1 className="text-6xl font-bold mb-4">Simple, Powerful Pricing</h1>
         <p className="text-2xl text-zinc-400 mb-12">Choose the plan that fits your content creation needs</p>
 
@@ -60,42 +61,43 @@ export default function Pricing() {
         <div className="inline-flex bg-zinc-900 rounded-full p-1 mb-12">
           <button
             onClick={() => setBillingCycle('monthly')}
-            className={`px-6 py-2.5 rounded-full transition ${billingCycle === 'monthly' ? 'bg-white text-black' : 'text-zinc-400'}`}
+            className={`px-8 py-3 rounded-full transition ${billingCycle === 'monthly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
           >
             Monthly
           </button>
           <button
             onClick={() => setBillingCycle('yearly')}
-            className={`px-6 py-2.5 rounded-full transition ${billingCycle === 'yearly' ? 'bg-white text-black' : 'text-zinc-400'}`}
+            className={`px-8 py-3 rounded-full transition ${billingCycle === 'yearly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
           >
-            Yearly <span className="text-emerald-400 text-sm">(Save 20%)</span>
+            Yearly <span className="text-emerald-400">(Save 20%)</span>
           </button>
         </div>
 
+        {/* Horizontal Plans */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`glass rounded-3xl p-8 relative ${plan.popular ? 'border-violet-500 scale-105' : 'border-white/10'}`}
+              className={`glass rounded-3xl p-8 relative flex flex-col h-full ${plan.popular ? 'border-2 border-violet-500 scale-[1.02]' : 'border border-white/10'}`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-violet-600 text-white text-sm px-6 py-1 rounded-full">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-violet-600 text-white text-sm px-6 py-1 rounded-full font-medium">
                   Most Popular
                 </div>
               )}
 
-              <h3 className="text-3xl font-bold mb-2">{plan.name}</h3>
+              <h3 className="text-3xl font-bold mb-1">{plan.name}</h3>
               <div className="flex items-baseline mb-8">
                 <span className="text-5xl font-bold">€{plan.price}</span>
-                <span className="text-zinc-400 ml-2">/{billingCycle === 'monthly' ? 'mo' : 'yr'}</span>
+                <span className="text-zinc-400 ml-2">{plan.period}</span>
               </div>
 
-              <p className="text-zinc-400 mb-8">{plan.description}</p>
+              <p className="text-zinc-400 mb-8 min-h-[50px]">{plan.description}</p>
 
-              <ul className="space-y-4 mb-10 text-left">
+              <ul className="space-y-4 mb-10 text-left flex-1">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="text-emerald-400 mt-1">✓</span>
+                    <span className="text-emerald-400 mt-0.5">✓</span>
                     <span>{feature}</span>
                   </li>
                 ))}

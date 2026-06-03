@@ -15,7 +15,7 @@ export default async function Home() {
       <img 
         src="/logo.png" 
         alt="ClipFlow AI" 
-        className="h-9 w-auto"   // Smaller size
+        className="h-9 w-auto"
       />
     </div>
 

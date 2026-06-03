@@ -8,13 +8,23 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      {/* Header */}
+      {/* Updated Header with your logo */}
       <header className="border-b border-white/10 bg-black/90 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center text-2xl font-bold">CF</div>
-            <h1 className="text-3xl font-bold tracking-tighter">ClipFlow AI</h1>
+          <div className="flex items-center gap-4">
+            <img 
+              src="/logo.png" 
+              alt="ClipFlow AI" 
+              className="h-11 w-auto" 
+            />
           </div>
+
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+            <a href="/" className="hover:text-violet-400 transition">Home</a>
+            <a href="/why" className="hover:text-violet-400 transition">Why Us</a>
+            <a href="/pricing" className="hover:text-violet-400 transition">Pricing</a>
+          </nav>
+
           <AuthButton user={user} />
         </div>
       </header>
@@ -23,6 +33,7 @@ export default async function Home() {
         <Dashboard />
       ) : (
         <main className="max-w-5xl mx-auto px-6 pt-28 pb-24 text-center">
+          {/* Your current landing content */}
           <div className="mb-6 inline-flex items-center gap-2 px-6 py-2.5 bg-white/5 rounded-full text-sm">
             ⚡ AI-Powered Twitch Repurposing
           </div>
@@ -36,11 +47,8 @@ export default async function Home() {
             Automatically detect highlights, generate captions, and post to X, YouTube Shorts & TikTok — saving you hours every week.
           </p>
 
-          <div className="flex justify-center gap-4 mb-20">
+          <div className="flex justify-center mb-20">
             <AuthButton user={null} />
-            <a href="/why" className="border border-white/30 hover:bg-white/5 px-8 py-4 rounded-2xl font-medium transition">
-              Why ClipFlow
-            </a>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">

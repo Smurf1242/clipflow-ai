@@ -29,6 +29,41 @@ function parseDurationToSeconds(duration: string) {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
+function getPresetPrompt(contentType: string) {
+  switch (contentType) {
+    case 'gta-fivem-rp':
+      return {
+        label: 'GTA/FiveM Roleplay',
+        guidance: 'Prioritise roleplay moments: funny dialogue, arguments, police chases, EMS scenes, gang tension, betrayals, unexpected chaos, emotional character beats, awkward voice chat, courtroom/interrogation scenes, failed robberies, and moments that make sense as TikTok/Reels RP clips. Do not only chase kills or loud moments. RP clips often work because of dialogue, tension, character story, or comedy.'
+      };
+    case 'fps-competitive':
+      return {
+        label: 'FPS/Competitive',
+        guidance: 'Prioritise clutch plays, kill streaks, strong reactions, wins, losses, tactical moments, rage/funny comms, and short punchy gameplay highlights.'
+      };
+    case 'funny-moments':
+      return {
+        label: 'Funny Moments',
+        guidance: 'Prioritise jokes, fails, weird timing, unexpected reactions, chaotic accidents, funny conversations, and quotable moments.'
+      };
+    case 'story-drama':
+      return {
+        label: 'Story/Drama',
+        guidance: 'Prioritise emotional reveals, arguments, betrayals, tense conversations, character development, decisions, and story progression.'
+      };
+    case 'just-chatting':
+      return {
+        label: 'Just Chatting',
+        guidance: 'Prioritise strong opinions, funny stories, unexpected chat moments, personal reactions, debates, and quotable lines.'
+      };
+    default:
+      return {
+        label: 'General Gaming',
+        guidance: 'Prioritise funny, surprising, intense, emotional, or highly quotable stream moments suitable for short-form video.'
+      };
+  }
+}
+
 function fallbackHighlights(durationSeconds: number, title: string): Highlight[] {
   const safeDuration = Math.max(durationSeconds, 180);
   const points = [0.25, 0.5, 0.75];
@@ -50,7 +85,7 @@ function fallbackHighlights(durationSeconds: number, title: string): Highlight[]
 
 export async function POST(request: Request) {
   try {
-    const { vod } = await request.json();
+    const { vod, contentType = 'gta-fivem-rp' } = await request.json();
 
     if (!vod?.id || !vod?.title) {
       return NextResponse.json({ error: 'Missing VOD data' }, { status: 400 });
@@ -66,20 +101,23 @@ export async function POST(request: Request) {
     }
 
     const durationSeconds = parseDurationToSeconds(String(vod.duration ?? ''));
+    const preset = getPresetPrompt(String(contentType));
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4.1-mini',
       response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
           content:
-            'You are ClipFlow-AI, a Twitch highlight editor. Return only valid JSON. Suggest punchy, realistic highlight timestamps from VOD metadata. Each clip should be 25-60 seconds long and suitable for TikTok, YouTube Shorts, and X.',
+            `You are ClipFlow-AI, a Twitch highlight editor. Return only valid JSON. Suggest punchy, realistic highlight timestamps from VOD metadata. Each clip should be 20-60 seconds long and suitable for TikTok, YouTube Shorts, and X. Current preset: ${preset.label}. ${preset.guidance}`,
         },
         {
           role: 'user',
           content: JSON.stringify({
-            task: 'Suggest 3 likely highlight clips from this Twitch VOD metadata.',
+            task: `Suggest 3-5 likely highlight clips from this Twitch VOD metadata using the ${preset.label} preset.`,
+            contentType: String(contentType),
+            presetGuidance: preset.guidance,
             requiredJsonShape: {
               highlights: [
                 {
@@ -143,6 +181,7 @@ export async function POST(request: Request) {
         start_seconds: highlight.startSeconds,
         end_seconds: highlight.endSeconds,
         status: 'highlight_suggested',
+        content_type: String(contentType),
       })),
     );
 

@@ -42,3 +42,7 @@ alter table public.clips add column if not exists start_seconds integer;
 alter table public.clips add column if not exists end_seconds integer;
 alter table public.clips add column if not exists status text default 'queued';
 alter table public.clips add column if not exists output_url text;
+
+-- AI preset/content type used when suggesting clips
+alter table public.generated_clips add column if not exists content_type text;
+alter table public.clips add column if not exists content_type text;

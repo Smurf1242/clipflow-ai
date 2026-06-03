@@ -40,6 +40,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [workingVodId, setWorkingVodId] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('');
+  const [contentType, setContentType] = useState<string>('gta-fivem-rp');
 
   useEffect(() => {
     fetchVods();
@@ -68,7 +69,7 @@ export default function Dashboard() {
     const res = await fetch('/api/twitch/highlights', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ vod }),
+      body: JSON.stringify({ vod, contentType }),
     });
 
     const data = await res.json();
@@ -116,7 +117,7 @@ export default function Dashboard() {
         <div>
           <h2 className="text-4xl font-black md:text-5xl">Your Recent VODs</h2>
           <p className="mt-3 max-w-2xl text-zinc-400">
-            Fetch your Twitch VODs, detect likely highlight moments, then queue clips for rendering.
+            Fetch your Twitch VODs, choose an AI preset, detect likely highlight moments, then queue clips for rendering.
           </p>
         </div>
 
@@ -131,6 +132,26 @@ export default function Dashboard() {
             Terms
           </Link>
         </div>
+      </div>
+
+
+      <div className="mb-8 rounded-3xl border border-emerald-400/20 bg-emerald-500/10 p-5">
+        <label className="mb-2 block text-sm font-bold text-emerald-100">AI clip preset</label>
+        <select
+          value={contentType}
+          onChange={(event) => setContentType(event.target.value)}
+          className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-white outline-none md:max-w-md"
+        >
+          <option value="gta-fivem-rp">GTA / FiveM Roleplay</option>
+          <option value="general-gaming">General Gaming</option>
+          <option value="fps-competitive">FPS / Competitive</option>
+          <option value="funny-moments">Funny Moments</option>
+          <option value="story-drama">Story / Drama</option>
+          <option value="just-chatting">Just Chatting</option>
+        </select>
+        <p className="mt-3 text-sm text-emerald-100/80">
+          GTA/FiveM mode looks for RP dialogue, police chases, EMS scenes, gang tension, comedy, betrayals, and character story moments instead of only loud gameplay spikes.
+        </p>
       </div>
 
       {statusMessage && (
@@ -171,7 +192,7 @@ export default function Dashboard() {
                   disabled={workingVodId === vod.id}
                   className="w-full rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600 py-4 font-bold transition hover:from-violet-500 hover:to-fuchsia-500 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {workingVodId === vod.id ? 'Detecting...' : '✨ Detect Highlights'}
+                  {workingVodId === vod.id ? 'Detecting...' : `✨ Detect Highlights`}
                 </button>
               </div>
             </article>

@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4.1-mini",
       messages: [
         {
           role: "system",
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
         },
         {
           role: "user",
-          content: `Create 2-3 viral clip ideas with exciting captions for this Twitch VOD. Make them suitable for X (Twitter) and YouTube Shorts.`
+          content: `Create 2-3 viral clip ideas with exciting captions for this Twitch VOD. If it is GTA/FiveM RP, prioritise funny dialogue, police/gang/EMS RP, chaos, betrayals, chases, or character story moments. Make them suitable for TikTok, X, and YouTube Shorts.`
         }
       ],
       max_tokens: 400

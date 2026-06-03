@@ -32,7 +32,7 @@ export default async function Home() {
           <h1 className="text-7xl md:text-8xl font-bold tracking-tighter leading-none mb-8">
             Turn Your Twitch Streams<br />
             Into{' '}
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent font-bold">
+            <span className="bg-gradient-to-r from-violet-300 via-fuchsia-400 to-pink-300 bg-clip-text text-transparent font-black drop-shadow-[0_0_30px_rgb(168,85,247)]">
               Viral Content
             </span>
           </h1>

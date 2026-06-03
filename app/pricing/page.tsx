@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import HomeButton from '@/components/HomeButton';
 
 type BillingCycle = 'monthly' | 'yearly';
 
@@ -10,6 +11,9 @@ export default function PricingPage() {
   return (
     <main className="min-h-screen bg-[#050505] px-6 py-16 text-white">
       <section className="mx-auto max-w-6xl">
+        <div className="mb-8">
+          <HomeButton />
+        </div>
         <div className="mb-10 text-center">
           <h1 className="mb-4 text-4xl font-black tracking-tight md:text-6xl">
             Simple, Powerful Pricing

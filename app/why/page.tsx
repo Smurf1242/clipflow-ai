@@ -1,7 +1,12 @@
+import HomeButton from '@/components/HomeButton';
+
 export default function WhyPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white py-20">
       <div className="max-w-5xl mx-auto px-6">
+        <div className="mb-8">
+          <HomeButton />
+        </div>
         <div className="text-center mb-16">
           <h1 className="text-6xl font-bold mb-6">Why Creators Choose ClipFlow AI</h1>
           <p className="text-2xl text-zinc-400 max-w-3xl mx-auto">

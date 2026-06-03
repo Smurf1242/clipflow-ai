@@ -8,7 +8,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
-      <Header user={user} />
+      <Header />
 
       {user ? (
         <Dashboard />
@@ -28,10 +28,7 @@ export default async function Home() {
           </p>
 
           <div className="flex justify-center mb-20">
-            <a 
-              href="/"
-              className="bg-white text-black px-10 py-4 rounded-2xl text-xl font-semibold hover:bg-zinc-200 transition inline-block"
-            >
+            <a href="/" className="bg-white text-black px-10 py-4 rounded-2xl text-xl font-semibold hover:bg-zinc-200 transition inline-block">
               Login with Twitch
             </a>
           </div>

@@ -3,9 +3,17 @@ import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { useEffect, useState } from 'react';
 
-export default function Header({ user }: { user?: any }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(!!user);
+export default function Header() {
+  const [user, setUser] = useState<any>(null);
   const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -17,8 +25,8 @@ export default function Header({ user }: { user?: any }) {
       <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gradient-to-br from-violet-600 to-fuchsia-500 rounded-2xl flex items-center justify-center text-xl font-bold">CF</div>
-            <h1 className="text-2xl font-bold tracking-tighter">ClipFlow AI</h1>
+            <div className="w-10 h-10 bg-violet-600 rounded-2xl flex items-center justify-center text-2xl font-bold">CF</div>
+            <h1 className="text-3xl font-bold tracking-tighter">ClipFlow AI</h1>
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
@@ -29,17 +37,17 @@ export default function Header({ user }: { user?: any }) {
         </div>
 
         <div>
-          {isLoggedIn ? (
+          {user ? (
             <button 
               onClick={handleSignOut}
-              className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg text-sm font-medium"
+              className="bg-red-600 hover:bg-red-700 px-6 py-2.5 rounded-xl text-sm font-medium transition"
             >
               Sign Out
             </button>
           ) : (
             <Link 
               href="/"
-              className="bg-white text-black px-6 py-2.5 rounded-xl font-medium hover:bg-zinc-200 transition"
+              className="bg-white text-black px-8 py-3 rounded-2xl font-semibold hover:bg-zinc-200 transition"
             >
               Login with Twitch
             </Link>

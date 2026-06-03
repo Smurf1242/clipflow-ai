@@ -58,27 +58,27 @@ export default function Pricing() {
         <p className="text-2xl text-zinc-400 mb-12">Choose the plan that fits your content creation needs</p>
 
         {/* Billing Toggle */}
-        <div className="inline-flex bg-zinc-900 rounded-full p-1 mb-12">
+        <div className="inline-flex bg-zinc-900 rounded-full p-1 mb-16">
           <button
             onClick={() => setBillingCycle('monthly')}
-            className={`px-8 py-3 rounded-full transition ${billingCycle === 'monthly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
+            className={`px-8 py-3 rounded-full transition-all ${billingCycle === 'monthly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
           >
             Monthly
           </button>
           <button
             onClick={() => setBillingCycle('yearly')}
-            className={`px-8 py-3 rounded-full transition ${billingCycle === 'yearly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
+            className={`px-8 py-3 rounded-full transition-all ${billingCycle === 'yearly' ? 'bg-white text-black font-semibold' : 'text-zinc-400'}`}
           >
             Yearly <span className="text-emerald-400">(Save 20%)</span>
           </button>
         </div>
 
-        {/* Horizontal Plans */}
+        {/* Horizontal Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`glass rounded-3xl p-8 relative flex flex-col h-full ${plan.popular ? 'border-2 border-violet-500 scale-[1.02]' : 'border border-white/10'}`}
+              className={`glass rounded-3xl p-8 relative flex flex-col ${plan.popular ? 'border-2 border-violet-500 scale-[1.03]' : 'border border-white/10'}`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-violet-600 text-white text-sm px-6 py-1 rounded-full font-medium">
@@ -92,18 +92,18 @@ export default function Pricing() {
                 <span className="text-zinc-400 ml-2">{plan.period}</span>
               </div>
 
-              <p className="text-zinc-400 mb-8 min-h-[50px]">{plan.description}</p>
+              <p className="text-zinc-400 mb-8">{plan.description}</p>
 
               <ul className="space-y-4 mb-10 text-left flex-1">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span className="text-emerald-400 mt-1">✓</span>
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              <button className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all ${plan.popular 
+              <button className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all mt-auto ${plan.popular 
                 ? 'bg-white text-black hover:bg-zinc-200' 
                 : 'bg-zinc-800 hover:bg-zinc-700'}`}>
                 {plan.buttonText}

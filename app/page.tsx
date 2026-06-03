@@ -23,6 +23,7 @@ export default async function Home() {
       <a href="/" className="hover:text-violet-400 transition">Home</a>
       <a href="/why" className="hover:text-violet-400 transition">Why Us</a>
       <a href="/pricing" className="hover:text-violet-400 transition">Pricing</a>
+      <a href="/terms" className="hover:text-violet-400 transition">Terms</a>
     </nav>
 
     <AuthButton user={user} />

@@ -127,6 +127,9 @@ export default function Dashboard() {
           <Link href="/pricing" className="rounded-2xl bg-white px-5 py-3 font-bold text-black transition hover:bg-zinc-200">
             Pricing
           </Link>
+          <Link href="/terms" className="rounded-2xl border border-white/10 px-5 py-3 font-bold transition hover:border-violet-400/60 hover:bg-white/5">
+            Terms
+          </Link>
         </div>
       </div>
 

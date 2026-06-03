@@ -39,22 +39,39 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('twitch_access_token')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
-  if (!profile?.twitch_access_token) {
+  const twitchAccessToken = session?.provider_token ?? profile?.twitch_access_token ?? '';
+  const twitchClientId = process.env.TWITCH_CLIENT_ID ?? '';
+
+  if (!twitchAccessToken) {
     return NextResponse.json(
-      { error: 'Please reconnect your Twitch account' },
+      {
+        error:
+          'Twitch is connected for login, but no Twitch access token was available. Please sign out, then log back in with Twitch.',
+      },
       { status: 400 },
     );
   }
 
+  if (!twitchClientId) {
+    return NextResponse.json(
+      { error: 'Missing TWITCH_CLIENT_ID in your Netlify environment variables.' },
+      { status: 500 },
+    );
+  }
+
   const twitchHeaders = {
-    'Client-ID': process.env.TWITCH_CLIENT_ID ?? '',
-    Authorization: `Bearer ${profile.twitch_access_token}`,
+    'Client-ID': twitchClientId,
+    Authorization: `Bearer ${twitchAccessToken}`,
   };
 
   try {

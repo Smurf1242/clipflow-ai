@@ -7,7 +7,13 @@ export default function AuthButton({ user }: { user: any }) {
   const supabase = createClient();
 
   const signIn = () => {
-    supabase.auth.signInWithOAuth({ provider: 'twitch' });
+    supabase.auth.signInWithOAuth({
+      provider: 'twitch',
+      options: {
+        scopes: 'user:read:email',
+        redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined,
+      },
+    });
   };
 
   const signOut = async () => {

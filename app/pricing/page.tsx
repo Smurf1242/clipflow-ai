@@ -12,7 +12,8 @@ export default function Pricing() {
       desc: "Get started",
       features: ["5 AI clips/month", "Basic captions", "Manual posting", "Community support"],
       btn: "Current Plan",
-      popular: false
+      popular: false,
+      color: "emerald" // Green for Free
     },
     {
       name: "Pro",
@@ -21,7 +22,8 @@ export default function Pricing() {
       desc: "For serious creators",
       features: ["Unlimited clips", "Auto-post to X", "Desktop App", "Priority support"],
       btn: "Upgrade to Pro",
-      popular: true
+      popular: true,
+      color: "violet" // Purple for Pro
     },
     {
       name: "Creator",
@@ -30,7 +32,8 @@ export default function Pricing() {
       desc: "For power users",
       features: ["Everything in Pro", "Bulk processing", "Custom AI training", "Dedicated support"],
       btn: "Upgrade to Creator",
-      popular: false
+      popular: false,
+      color: "amber" // Orange/Amber for Creator
     }
   ];
 
@@ -62,7 +65,7 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* Pricing Cards */}
+        {/* Pricing Cards with Colorful Text */}
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 max-w-5xl mx-auto">
           {plans.map((plan, index) => (
             <div 
@@ -84,12 +87,14 @@ export default function Pricing() {
 
               <p className="text-zinc-400 mb-8">{plan.desc}</p>
 
-              {/* Aligned Features List */}
-              <ul className="space-y-4 mb-12 flex-1 text-left">
+              {/* Colorful Features */}
+              <ul className="space-y-4 mb-12 flex-1">
                 {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3 text-zinc-300">
-                    <span className="text-emerald-400 text-lg flex-shrink-0">✓</span>
-                    <span>{feature}</span>
+                  <li key={i} className="flex justify-center items-center gap-3">
+                    <span className={`text-lg ${plan.color === 'emerald' ? 'text-emerald-400' : plan.color === 'violet' ? 'text-violet-400' : 'text-amber-400'}`}>✓</span>
+                    <span className={`${plan.color === 'emerald' ? 'text-emerald-300' : plan.color === 'violet' ? 'text-violet-300' : 'text-amber-300'}`}>
+                      {feature}
+                    </span>
                   </li>
                 ))}
               </ul>

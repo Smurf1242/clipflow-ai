@@ -24,6 +24,7 @@ export default async function Home() {
       <a href="/why" className="hover:text-violet-400 transition">Why Us</a>
       <a href="/pricing" className="hover:text-violet-400 transition">Pricing</a>
       <a href="/terms" className="hover:text-violet-400 transition">Terms</a>
+      <a href="/download" className="rounded-full bg-violet-500 px-4 py-2 font-bold text-white hover:bg-violet-400 transition">Alpha Download</a>
     </nav>
 
     <AuthButton user={user} />
@@ -48,8 +49,14 @@ export default async function Home() {
             Automatically detect highlights, generate captions, and post to X, YouTube Shorts & TikTok — saving you hours every week.
           </p>
 
-          <div className="flex justify-center mb-20">
+          <div className="mb-20 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <AuthButton user={null} />
+            <a
+              href="/download"
+              className="rounded-xl border border-violet-400/60 bg-violet-500/10 px-6 py-3 font-bold text-violet-100 transition hover:bg-violet-500 hover:text-white"
+            >
+              Download Alpha Desktop App
+            </a>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">

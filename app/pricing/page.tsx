@@ -38,13 +38,13 @@ export default function Pricing() {
     <div className="min-h-screen bg-[#050505] py-20">
       <div className="max-w-6xl mx-auto px-6">
         
-        {/* Header - Centered */}
+        {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-6xl font-bold mb-4">Simple, Powerful Pricing</h1>
           <p className="text-2xl text-zinc-400">Choose the plan that fits your content creation needs</p>
         </div>
 
-        {/* Billing Toggle - Centered */}
+        {/* Billing Toggle */}
         <div className="flex justify-center mb-12">
           <div className="inline-flex bg-zinc-900 rounded-full p-1">
             <button 
@@ -62,7 +62,7 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* Pricing Cards - Properly Centered with Good Padding */}
+        {/* Pricing Cards */}
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 max-w-5xl mx-auto">
           {plans.map((plan, index) => (
             <div 
@@ -84,10 +84,11 @@ export default function Pricing() {
 
               <p className="text-zinc-400 mb-8">{plan.desc}</p>
 
-              <ul className="space-y-4 mb-12 flex-1">
+              {/* Aligned Features List */}
+              <ul className="space-y-4 mb-12 flex-1 text-left">
                 {plan.features.map((feature, i) => (
-                  <li key={i} className="flex justify-center items-start gap-3">
-                    <span className="text-emerald-400 mt-1">✓</span>
+                  <li key={i} className="flex items-center gap-3 text-zinc-300">
+                    <span className="text-emerald-400 text-lg flex-shrink-0">✓</span>
                     <span>{feature}</span>
                   </li>
                 ))}

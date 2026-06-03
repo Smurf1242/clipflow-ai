@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+type TwitchUser = {
+  id: string;
+  login: string;
+  display_name: string;
+};
+
 type Vod = {
   id: string;
   title: string;
@@ -41,8 +47,14 @@ export default function Dashboard() {
   const [workingVodId, setWorkingVodId] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [contentType, setContentType] = useState<string>('gta-fivem-rp');
+  const [twitchUser, setTwitchUser] = useState<TwitchUser | null>(null);
+  const [embedParent, setEmbedParent] = useState('clipflow-ai.netlify.app');
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setEmbedParent(window.location.hostname || 'clipflow-ai.netlify.app');
+    }
+
     fetchVods();
   }, []);
 
@@ -55,6 +67,7 @@ export default function Dashboard() {
 
     if (res.ok) {
       setVods(Array.isArray(data) ? data : data.vods ?? []);
+      setTwitchUser(data.user ?? null);
     } else {
       setStatusMessage(data.error ?? 'Could not fetch Twitch VODs.');
     }
@@ -153,6 +166,48 @@ export default function Dashboard() {
           GTA/FiveM mode looks for RP dialogue, police chases, EMS scenes, gang tension, comedy, betrayals, and character story moments instead of only loud gameplay spikes.
         </p>
       </div>
+
+
+      {twitchUser?.login && (
+        <section className="mb-10 rounded-3xl border border-violet-500/30 bg-white/[0.03] p-5 shadow-2xl shadow-violet-500/5">
+          <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h3 className="text-2xl font-black">Live Twitch View</h3>
+              <p className="mt-2 text-sm text-zinc-400">
+                Watch your connected Twitch channel and chat directly from the ClipFlow-AI dashboard.
+              </p>
+            </div>
+
+            <a
+              href={`https://www.twitch.tv/${twitchUser.login}`}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-2xl border border-white/10 px-5 py-3 text-sm font-bold transition hover:bg-white/5"
+            >
+              Open on Twitch
+            </a>
+          </div>
+
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+              <iframe
+                title="Twitch live stream player"
+                src={`https://player.twitch.tv/?channel=${twitchUser.login}&parent=${embedParent}&muted=true`}
+                allowFullScreen
+                className="aspect-video h-full min-h-[260px] w-full"
+              />
+            </div>
+
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+              <iframe
+                title="Twitch live chat"
+                src={`https://www.twitch.tv/embed/${twitchUser.login}/chat?parent=${embedParent}&darkpopout`}
+                className="h-[420px] w-full"
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       {statusMessage && (
         <div className="mb-8 rounded-2xl border border-violet-400/30 bg-violet-500/10 p-4 text-sm text-violet-100">

@@ -25,8 +25,9 @@ export default function DownloadPage() {
           </p>
 
           <a
-            href="/downloads/ClipFlow-AI-Alpha-Setup.exe"
-            download
+            href="https://drive.google.com/uc?export=download&id=1aHaatoKXkpu63iqx5JX1VItnsu7_g8wS"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex rounded-2xl bg-white px-8 py-4 text-lg font-black text-black transition hover:bg-zinc-200"
           >
             Download Windows Alpha Installer

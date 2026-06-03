@@ -35,8 +35,8 @@ export default function Pricing() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] py-20 px-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#050505] py-20">
+      <div className="max-w-6xl mx-auto px-6">
         
         {/* Header - Centered */}
         <div className="text-center mb-12">
@@ -62,12 +62,12 @@ export default function Pricing() {
           </div>
         </div>
 
-        {/* Pricing Cards - Centered & Side by Side */}
+        {/* Pricing Cards - Properly Centered with Good Padding */}
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 max-w-5xl mx-auto">
           {plans.map((plan, index) => (
             <div 
               key={index} 
-              className={`glass rounded-3xl p-8 flex flex-col w-full max-w-sm mx-auto md:mx-0 relative ${plan.popular ? 'border-2 border-violet-500 scale-105' : 'border border-white/10'}`}
+              className={`glass rounded-3xl p-10 flex flex-col w-full max-w-sm mx-auto md:mx-0 relative text-center ${plan.popular ? 'border-2 border-violet-500 scale-105' : 'border border-white/10'}`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-violet-600 px-6 py-1 rounded-full text-sm font-medium">
@@ -77,7 +77,7 @@ export default function Pricing() {
 
               <h3 className="text-3xl font-bold mb-2">{plan.name}</h3>
               
-              <div className="flex items-baseline mb-8">
+              <div className="flex justify-center items-baseline mb-8">
                 <span className="text-6xl font-bold">€{plan.price}</span>
                 <span className="text-zinc-400 ml-2">{plan.period}</span>
               </div>
@@ -86,7 +86,7 @@ export default function Pricing() {
 
               <ul className="space-y-4 mb-12 flex-1">
                 {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
+                  <li key={i} className="flex justify-center items-start gap-3">
                     <span className="text-emerald-400 mt-1">✓</span>
                     <span>{feature}</span>
                   </li>

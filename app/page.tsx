@@ -21,6 +21,7 @@ export default async function Home() {
           <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
             <a href="/" className="transition hover:text-violet-400">Home</a>
             <a href="/why" className="transition hover:text-violet-400">Why Us</a>
+            <a href="/vela" className="transition hover:text-violet-400">VELA</a>
             <a href="/pricing" className="transition hover:text-violet-400">Pricing</a>
             <a href="/terms" className="transition hover:text-violet-400">Terms</a>
             <a href="/download" className="rounded-full bg-violet-500 px-4 py-2 font-bold text-white transition hover:bg-violet-400">Alpha Download</a>
@@ -75,6 +76,13 @@ export default async function Home() {
                 <p className="text-lg leading-8 text-zinc-300">
                   VELA is designed to understand roleplay pacing, storylines, character conflict, comedy, chaos, and emotional payoffs so it can surface clips that generic AI tools often miss.
                 </p>
+
+                <a
+                  href="/vela"
+                  className="mt-7 inline-flex rounded-xl border border-violet-400/50 bg-violet-500/10 px-6 py-3 font-bold text-violet-100 transition hover:bg-violet-500 hover:text-white"
+                >
+                  See how VELA is tuned
+                </a>
               </div>
 
               <div className="rounded-3xl border border-white/10 bg-black/40 p-6">

@@ -24,6 +24,7 @@ export default async function Home() {
             <a href="/vela" className="transition hover:text-violet-400">VELA</a>
             <a href="/pricing" className="transition hover:text-violet-400">Pricing</a>
             <a href="/terms" className="transition hover:text-violet-400">Terms</a>
+            <a href="/alpha" className="transition hover:text-violet-400">Alpha Signup</a>
             <a href="/download" className="rounded-full bg-violet-500 px-4 py-2 font-bold text-white transition hover:bg-violet-400">Alpha Download</a>
           </nav>
 
@@ -55,6 +56,12 @@ export default async function Home() {
               className="rounded-xl border border-violet-400/60 bg-violet-500/10 px-6 py-3 font-bold text-violet-100 transition hover:bg-violet-500 hover:text-white"
             >
               Download Alpha Desktop App
+            </a>
+            <a
+              href="/alpha"
+              className="rounded-xl border border-cyan-400/50 bg-cyan-400/10 px-6 py-3 font-bold text-cyan-100 transition hover:bg-cyan-400 hover:text-black"
+            >
+              Sign Up for Alpha Access
             </a>
           </div>
 
@@ -124,6 +131,29 @@ export default async function Home() {
               <p className="text-lg leading-8 text-zinc-300">
                 Alongside AI clipping and captioning, we are building livestream studio features for recording, scenes, source layouts, chat, alerts, hardware encoding, and future AI-assisted stream tools — giving creators one place to stream, record, clip, caption, and repurpose content.
               </p>
+            </div>
+          </section>
+
+          <section className="mb-20 rounded-[2rem] border border-violet-500/30 bg-gradient-to-br from-violet-500/15 via-black to-cyan-500/10 p-8 text-left md:p-10">
+            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+              <div>
+                <div className="mb-4 inline-flex rounded-full bg-violet-500/15 px-4 py-2 text-sm font-bold text-violet-200">
+                  Limited alpha access
+                </div>
+                <h2 className="mb-4 text-4xl font-black leading-tight">
+                  Want to test ClipFlow-AI before public release?
+                </h2>
+                <p className="max-w-3xl text-lg leading-8 text-zinc-300">
+                  Apply as an early creator tester and tell us about your stream, average viewers, content style, Discord, and platform profile. We will review applications manually before giving access.
+                </p>
+              </div>
+
+              <a
+                href="/alpha"
+                className="inline-flex justify-center rounded-xl bg-white px-7 py-4 font-black text-black transition hover:bg-zinc-200"
+              >
+                Apply for Alpha
+              </a>
             </div>
           </section>
 

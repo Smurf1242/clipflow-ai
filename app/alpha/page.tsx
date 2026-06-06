@@ -14,12 +14,20 @@ export default function AlphaSignupPage() {
             ← Home
           </Link>
 
+          <div className="flex flex-wrap gap-3">
+          <Link
+            href="/alpha/guide"
+            className="hidden rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-5 py-3 font-bold text-cyan-100 transition hover:bg-cyan-400 hover:text-black sm:inline-flex"
+          >
+            Alpha Guide
+          </Link>
           <Link
             href="/download"
             className="hidden rounded-xl border border-violet-400/50 bg-violet-500/10 px-5 py-3 font-bold text-violet-100 transition hover:bg-violet-500 hover:text-white sm:inline-flex"
           >
             Already invited?
           </Link>
+          </div>
         </div>
 
         <section className="mb-10 overflow-hidden rounded-[2rem] border border-violet-500/30 bg-gradient-to-br from-violet-500/20 via-fuchsia-500/10 to-cyan-500/10 p-8 shadow-2xl shadow-violet-950/30 md:p-12">
@@ -233,6 +241,19 @@ export default function AlphaSignupPage() {
                 <li>✓ Willingness to give honest alpha feedback</li>
                 <li>✓ Windows PC for the desktop app</li>
               </ul>
+            </div>
+
+            <div className="rounded-[2rem] border border-violet-400/20 bg-violet-500/5 p-7">
+              <h2 className="mb-4 text-2xl font-black">Need help using the app?</h2>
+              <p className="mb-5 leading-7 text-zinc-300">
+                We have added a visual alpha guide with screenshots of the Clips tab, VELA AI tools, caption workflow, Livestream Studio, audio controls, and recording settings.
+              </p>
+              <Link
+                href="/alpha/guide"
+                className="inline-flex rounded-xl border border-violet-400/50 bg-violet-500/10 px-5 py-3 font-bold text-violet-100 transition hover:bg-violet-500 hover:text-white"
+              >
+                Open Alpha Guide
+              </Link>
             </div>
 
             <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-400/5 p-7">

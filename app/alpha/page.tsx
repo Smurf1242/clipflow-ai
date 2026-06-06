@@ -43,8 +43,6 @@ export default function AlphaSignupPage() {
             name="alpha-signup"
             method="POST"
             action="/alpha/thanks"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
             className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-black/30 md:p-8"
           >
             <input type="hidden" name="form-name" value="alpha-signup" />
@@ -240,7 +238,7 @@ export default function AlphaSignupPage() {
             <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-400/5 p-7">
               <h2 className="mb-4 text-2xl font-black">Where submissions go</h2>
               <p className="leading-7 text-zinc-300">
-                Applications are captured through Netlify Forms so they can be reviewed before access is given. You can enable email alerts inside Netlify Forms to receive each application directly.
+                Applications are captured through Netlify Forms using a static hidden form, so they can be reviewed before access is given. You can enable email alerts inside Netlify Forms to receive each application directly.
               </p>
             </div>
           </aside>

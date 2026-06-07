@@ -6,6 +6,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const VELA_MODEL = process.env.OPENAI_MODEL || 'gpt-4.1-mini';
+
 type Highlight = {
   title: string;
   startSeconds: number;
@@ -85,7 +87,7 @@ function fallbackHighlights(durationSeconds: number, title: string): Highlight[]
 
 export async function POST(request: Request) {
   try {
-    const { vod, contentType = 'gta-fivem-rp' } = await request.json();
+    const { vod, contentType = 'gta-fivem-rp', streamNotes = '' } = await request.json();
 
     if (!vod?.id || !vod?.title) {
       return NextResponse.json({ error: 'Missing VOD data' }, { status: 400 });
@@ -100,24 +102,34 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: 'VELA is not connected because OPENAI_API_KEY is missing from the website environment variables.' },
+        { status: 500 },
+      );
+    }
+
     const durationSeconds = parseDurationToSeconds(String(vod.duration ?? ''));
     const preset = getPresetPrompt(String(contentType));
+    const testerNotes = String(streamNotes ?? '').trim().slice(0, 2500);
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
+      model: VELA_MODEL,
       response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
           content:
-            `You are ClipFlow-AI, a Twitch highlight editor. Return only valid JSON. Suggest punchy, realistic highlight timestamps from VOD metadata. Each clip should be 20-60 seconds long and suitable for TikTok, YouTube Shorts, and X. Current preset: ${preset.label}. ${preset.guidance}`,
+            `You are VELA, ClipFlow-AI's roleplay-aware clipping assistant. Return only valid JSON. You are analysing Twitch VOD metadata plus any creator/tester notes supplied. Be honest that this is a web dashboard scan, not frame-by-frame video transcription unless transcript/notes are supplied. Suggest realistic highlight timestamps. Each clip should be 20-60 seconds long and suitable for TikTok, YouTube Shorts, and X. Current preset: ${preset.label}. ${preset.guidance} Score RP/story value higher than generic noise. Prioritise scenes with story payoff, funny dialogue, conflict, chase escalation, betrayals, emotional turns, EMS/police/gang/court scenes, and moments a creator would actually post.`,
         },
         {
           role: 'user',
           content: JSON.stringify({
-            task: `Suggest 3-5 likely highlight clips from this Twitch VOD metadata using the ${preset.label} preset.`,
+            task: `Run a VELA Deep Scan and suggest 3-5 likely highlight clips from this Twitch VOD using metadata, duration, title context, and any creator notes/transcript supplied.`,
             contentType: String(contentType),
             presetGuidance: preset.guidance,
+            streamNotesOrTranscript: testerNotes || 'No extra notes or transcript supplied.',
+            analysisMode: testerNotes ? 'metadata_plus_creator_notes_or_transcript' : 'metadata_only_web_scan',
             requiredJsonShape: {
               highlights: [
                 {

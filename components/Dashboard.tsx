@@ -41,6 +41,11 @@ type Highlight = {
   vodUrl?: string;
 };
 
+type VelaChatMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+};
+
 function formatTime(totalSeconds: number) {
   const safeSeconds = Math.max(0, Math.floor(totalSeconds));
   const minutes = Math.floor(safeSeconds / 60);
@@ -59,6 +64,10 @@ export default function Dashboard() {
   const [embedParent, setEmbedParent] = useState('clipflow-ai.netlify.app');
   const [openAIStatus, setOpenAIStatus] = useState<OpenAIStatus | null>(null);
   const [streamNotes, setStreamNotes] = useState('');
+  const [velaChatOpen, setVelaChatOpen] = useState(false);
+  const [velaChatInput, setVelaChatInput] = useState('');
+  const [velaChatBusy, setVelaChatBusy] = useState(false);
+  const [velaChatMessages, setVelaChatMessages] = useState<VelaChatMessage[]>([]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -68,6 +77,38 @@ export default function Dashboard() {
     fetchVods();
     fetchOpenAIStatus();
   }, []);
+
+  const velaDisplayName = twitchUser?.display_name || twitchUser?.login || 'creator';
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !twitchUser?.login) return;
+
+    const savedContext = window.localStorage.getItem(`clipflow-vela-context-${twitchUser.login}`);
+    const savedMessages = window.localStorage.getItem(`clipflow-vela-chat-${twitchUser.login}`);
+
+    if (savedContext && !streamNotes) {
+      setStreamNotes(savedContext);
+    }
+
+    if (savedMessages) {
+      try {
+        const parsed = JSON.parse(savedMessages) as VelaChatMessage[];
+        if (Array.isArray(parsed)) setVelaChatMessages(parsed.slice(-12));
+      } catch {
+        setVelaChatMessages([]);
+      }
+    }
+  }, [twitchUser?.login]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !twitchUser?.login) return;
+    window.localStorage.setItem(`clipflow-vela-context-${twitchUser.login}`, streamNotes);
+  }, [streamNotes, twitchUser?.login]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !twitchUser?.login) return;
+    window.localStorage.setItem(`clipflow-vela-chat-${twitchUser.login}`, JSON.stringify(velaChatMessages.slice(-12)));
+  }, [velaChatMessages, twitchUser?.login]);
 
   const fetchOpenAIStatus = async () => {
     try {
@@ -143,6 +184,61 @@ export default function Dashboard() {
 
     const data = await res.json();
     setStatusMessage(res.ok ? data.message : data.error ?? 'Clip job failed.');
+  };
+
+  const sendVelaChatMessage = async () => {
+    const text = velaChatInput.trim();
+    if (!text || velaChatBusy) return;
+
+    const userMessage: VelaChatMessage = { role: 'user', content: text };
+    const nextMessages = [...velaChatMessages, userMessage].slice(-12);
+
+    setVelaChatMessages(nextMessages);
+    setVelaChatInput('');
+    setVelaChatBusy(true);
+
+    const contextLine = `Creator note from VELA chat: ${text}`;
+    setStreamNotes((prev) => {
+      const clean = prev.trim();
+      if (clean.includes(contextLine)) return prev;
+      return clean ? `${clean}\n${contextLine}` : contextLine;
+    });
+
+    try {
+      const res = await fetch('/api/vela/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: nextMessages,
+          context: {
+            displayName: velaDisplayName,
+            twitchLogin: twitchUser?.login ?? '',
+            contentType,
+            streamNotes,
+            recentVods: vods.slice(0, 5).map((vod) => ({
+              title: vod.title,
+              duration: vod.duration,
+              created_at: vod.created_at,
+            })),
+          },
+        }),
+      });
+
+      const data = await res.json();
+      const reply = data.reply || 'Nyaa... I could not think of a useful reply that time. Try again with a little more stream context.';
+
+      setVelaChatMessages((prev) => [...prev, { role: 'assistant', content: reply }].slice(-12));
+    } catch {
+      setVelaChatMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Eep, I could not reach VELA chat right now. Please check the website connection and try again.',
+        },
+      ].slice(-12));
+    } finally {
+      setVelaChatBusy(false);
+    }
   };
 
   return (
@@ -362,6 +458,94 @@ export default function Dashboard() {
           </div>
         </section>
       )}
+
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+        {velaChatOpen ? (
+          <section className="w-[min(92vw,390px)] overflow-hidden rounded-[2rem] border border-violet-400/30 bg-[#080712]/95 shadow-2xl shadow-violet-950/50 backdrop-blur-xl">
+            <div className="flex items-center justify-between border-b border-white/10 bg-gradient-to-r from-violet-500/20 to-cyan-400/10 p-4">
+              <div className="flex items-center gap-3">
+                <img src="/vela-logo.png" alt="VELA AI logo" className="h-11 w-11 rounded-2xl border border-white/10 bg-black/40 object-cover" />
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-cyan-200">VELA AI</p>
+                  <h3 className="font-black">Hi {velaDisplayName}, I’m VELA ✨</h3>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setVelaChatOpen(false)}
+                className="rounded-full border border-white/10 px-3 py-1 text-sm font-black text-zinc-200 transition hover:bg-white/10"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="max-h-[410px] space-y-3 overflow-y-auto p-4">
+              <div className="rounded-2xl border border-violet-400/20 bg-violet-500/10 p-4 text-sm leading-6 text-violet-50">
+                Nyaa~ tell me what happened in your stream, who was involved, or what kind of clips you want me to hunt for. I’ll use your Twitch name and notes to help guide VELA scans, hehe ✨
+              </div>
+
+              {velaChatMessages.map((message, index) => (
+                <div
+                  key={`${message.role}-${index}`}
+                  className={`rounded-2xl p-4 text-sm leading-6 ${message.role === 'user' ? 'ml-8 bg-cyan-400/10 text-cyan-50' : 'mr-8 border border-white/10 bg-white/5 text-zinc-100'}`}
+                >
+                  {message.content}
+                </div>
+              ))}
+
+              {velaChatBusy ? (
+                <div className="mr-8 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-zinc-300">
+                  VELA is thinking... ✨
+                </div>
+              ) : null}
+            </div>
+
+            <div className="border-t border-white/10 p-4">
+              <div className="mb-3 flex flex-wrap gap-2">
+                {['Find RP drama', 'Find funny chaos', 'Find police chases', 'Improve captions'].map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    onClick={() => setVelaChatInput(prompt)}
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-zinc-200 transition hover:border-violet-300/50 hover:bg-violet-500/10"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  value={velaChatInput}
+                  onChange={(event) => setVelaChatInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') sendVelaChatMessage();
+                  }}
+                  placeholder="Tell VELA what to look for..."
+                  className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300"
+                />
+                <button
+                  type="button"
+                  onClick={sendVelaChatMessage}
+                  disabled={velaChatBusy || !velaChatInput.trim()}
+                  className="rounded-2xl bg-gradient-to-r from-violet-500 to-cyan-400 px-4 py-3 text-sm font-black text-white transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        <button
+          type="button"
+          onClick={() => setVelaChatOpen((value) => !value)}
+          className="flex h-16 w-16 items-center justify-center rounded-full border border-violet-300/40 bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 text-2xl shadow-2xl shadow-violet-700/40 transition hover:scale-105"
+          aria-label="Chat with VELA"
+        >
+          💜
+        </button>
+      </div>
     </div>
   );
 }

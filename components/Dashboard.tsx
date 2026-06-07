@@ -225,17 +225,17 @@ export default function Dashboard() {
       });
 
       const data = await res.json();
-      const reply = data.reply || 'Nyaa... I could not think of a useful reply that time. Try again with a little more stream context.';
+      const reply = String(data.reply || 'Nyaa... I could not think of a useful reply that time. Try again with a little more stream context.');
+      const assistantMessage: VelaChatMessage = { role: 'assistant', content: reply };
 
-      setVelaChatMessages((prev) => [...prev, { role: 'assistant', content: reply }].slice(-12));
+      setVelaChatMessages((prev) => [...prev, assistantMessage].slice(-12));
     } catch {
-      setVelaChatMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: 'Eep, I could not reach VELA chat right now. Please check the website connection and try again.',
-        },
-      ].slice(-12));
+      const assistantMessage: VelaChatMessage = {
+        role: 'assistant',
+        content: 'Eep, I could not reach VELA chat right now. Please check the website connection and try again.',
+      };
+
+      setVelaChatMessages((prev) => [...prev, assistantMessage].slice(-12));
     } finally {
       setVelaChatBusy(false);
     }
@@ -466,7 +466,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-3">
                 <img src="/vela-logo.png" alt="VELA AI logo" className="h-11 w-11 rounded-2xl border border-white/10 bg-black/40 object-cover" />
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.22em] text-cyan-200">VELA AI</p>
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-cyan-200">VELA Chat</p>
                   <h3 className="font-black">Hi {velaDisplayName}, I’m VELA ✨</h3>
                 </div>
               </div>
@@ -481,7 +481,7 @@ export default function Dashboard() {
 
             <div className="max-h-[410px] space-y-3 overflow-y-auto p-4">
               <div className="rounded-2xl border border-violet-400/20 bg-violet-500/10 p-4 text-sm leading-6 text-violet-50">
-                Nyaa~ tell me what happened in your stream, who was involved, or what kind of clips you want me to hunt for. I’ll use your Twitch name and notes to help guide VELA scans, hehe ✨
+                Nyaa, tell me what happened in your stream, who was involved, or what kind of clips you want me to hunt for. I’ll use your Twitch name and notes to help guide VELA scans, uwu.
               </div>
 
               {velaChatMessages.map((message, index) => (

@@ -13,3 +13,13 @@ Important:
 - TWITCH_CLIENT_ID must be the public Client ID, not the Client Secret.
 - Redeploy Netlify after changing environment variables.
 - This build forces the HTTPS redirect URI server-side so the desktop app cannot accidentally send a wrong local HTTP redirect.
+
+
+IMPORTANT UPDATE:
+Twitch token exchange needs TWITCH_CLIENT_SECRET server-side in Netlify.
+Set both:
+- TWITCH_CLIENT_ID = Twitch app Client ID
+- TWITCH_CLIENT_SECRET = Twitch app Client Secret
+Then redeploy.
+Debug URL:
+https://clipflow-ai.netlify.app/api/twitch/desktop/debug

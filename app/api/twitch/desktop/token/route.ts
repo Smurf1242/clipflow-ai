@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
     const clientId = String(process.env.TWITCH_CLIENT_ID || process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID || '').trim();
+    const clientSecret = String(process.env.TWITCH_CLIENT_SECRET || '').trim();
 
     const code = String(body?.code || '').trim();
     const codeVerifier = String(body?.codeVerifier || '').trim();
@@ -21,6 +22,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!clientSecret || clientSecret.length < 10 || clientSecret.toLowerCase().includes('client_id')) {
+      return NextResponse.json(
+        { ok: false, error: 'Missing TWITCH_CLIENT_SECRET in Netlify. Add the Twitch Client Secret to Netlify environment variables, then redeploy.', redirectUri },
+        { status: 500 }
+      );
+    }
+
     if (!code || !codeVerifier) {
       return NextResponse.json(
         { ok: false, error: 'Missing Twitch auth code or code verifier.' },
@@ -30,6 +38,7 @@ export async function POST(request: NextRequest) {
 
     const tokenBody = new URLSearchParams({
       client_id: clientId,
+      client_secret: clientSecret,
       code,
       grant_type: 'authorization_code',
       redirect_uri: redirectUri,
@@ -50,6 +59,7 @@ export async function POST(request: NextRequest) {
         {
           ok: false,
           error: json?.message || json?.error_description || json?.error || `Twitch token exchange failed: ${response.status}`,
+          hint: 'If this says missing client secret, TWITCH_CLIENT_SECRET is missing/incorrect in Netlify or the site was not redeployed after adding it.',
         },
         { status: response.status }
       );

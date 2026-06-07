@@ -222,9 +222,6 @@ export default function Dashboard() {
                 placeholder="Paste any known moments, rough timestamps, chat notes, or transcript snippets here. Example: 00:42:10 police chase starts, 01:13:22 betrayal reveal, 02:04:55 funny EMS argument."
                 className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300"
               />
-              <p className="mt-2 text-xs leading-5 text-zinc-400">
-                This improves dashboard suggestions now. Full automatic VOD audio transcription still belongs in the desktop/local pipeline or a future dedicated worker.
-              </p>
             </div>
           </div>
         </div>

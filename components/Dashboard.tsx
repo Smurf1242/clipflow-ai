@@ -207,12 +207,10 @@ export default function Dashboard() {
               <div className="mb-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-sm font-black text-cyan-100">VELA web scan status</p>
-                  <p className="mt-1 text-xs leading-5 text-zinc-400">
-                    OpenAI runs server-side from your website environment. Testers never receive the API key.
-                  </p>
+
                 </div>
                 <span className={`rounded-full px-3 py-1 text-xs font-black ${openAIStatus?.ok ? 'bg-emerald-400/15 text-emerald-200' : 'bg-red-400/15 text-red-200'}`}>
-                  {openAIStatus?.ok ? `Connected: ${openAIStatus.model ?? 'gpt-4.1-mini'}` : 'OpenAI not connected'}
+                  {openAIStatus?.ok ? 'Connected' : 'Not connected'}
                 </span>
               </div>
 

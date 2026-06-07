@@ -1,0 +1,15 @@
+ClipFlow-AI Desktop Twitch Login Setup
+
+Use this exact Twitch Developer Console redirect URI:
+
+https://clipflow-ai.netlify.app/twitch-desktop-auth
+
+Netlify environment variables required:
+
+TWITCH_CLIENT_ID=your Twitch app Client ID
+TWITCH_CLIENT_SECRET=your Twitch app Client Secret (optional for this PKCE desktop login, but keep it for other Twitch API flows if used)
+
+Important:
+- TWITCH_CLIENT_ID must be the public Client ID, not the Client Secret.
+- Redeploy Netlify after changing environment variables.
+- This build forces the HTTPS redirect URI server-side so the desktop app cannot accidentally send a wrong local HTTP redirect.

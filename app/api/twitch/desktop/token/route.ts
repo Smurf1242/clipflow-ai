@@ -2,23 +2,24 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const DEFAULT_REDIRECT_URI = 'https://clipflow-ai.netlify.app/twitch-desktop-auth';
+const TWITCH_DESKTOP_REDIRECT_URI = 'https://clipflow-ai.netlify.app/twitch-desktop-auth';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
-    const clientId = process.env.TWITCH_CLIENT_ID || process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID;
-
-    if (!clientId) {
-      return NextResponse.json(
-        { ok: false, error: 'Missing TWITCH_CLIENT_ID in website environment variables.' },
-        { status: 500 }
-      );
-    }
+    const clientId = String(process.env.TWITCH_CLIENT_ID || process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID || '').trim();
 
     const code = String(body?.code || '').trim();
     const codeVerifier = String(body?.codeVerifier || '').trim();
-    const redirectUri = String(body?.redirectUri || DEFAULT_REDIRECT_URI).trim();
+    // Must match the authorize redirect exactly.
+    const redirectUri = TWITCH_DESKTOP_REDIRECT_URI;
+
+    if (!clientId || clientId.length < 10 || clientId.toLowerCase().includes('secret')) {
+      return NextResponse.json(
+        { ok: false, error: 'Invalid or missing TWITCH_CLIENT_ID. Set the public Twitch Client ID in Netlify, not the Client Secret.', redirectUri },
+        { status: 500 }
+      );
+    }
 
     if (!code || !codeVerifier) {
       return NextResponse.json(
